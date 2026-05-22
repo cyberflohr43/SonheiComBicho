@@ -1,0 +1,43 @@
+﻿@{
+    var jogador = ViewBag.Jogador as SonheiComBicho.Models.Jogador;
+    var bichos = ViewBag.Bichos as List<SonheiComBicho.Models.Bicho>;
+}
+
+<h2>Fazer Aposta</h2>
+<p>Jogador: <strong>@jogador?.Nome</strong> | Saldo: <strong>R$ @jogador?.Saldo.ToString("F2")</strong></p>
+
+@if (TempData["Erro"] != null)
+{
+    <p style="color:red">@TempData["Erro"]</p>
+}
+
+<form asp-action="Apostar" asp-route-jogadorId="@jogador?.Id" method="post">
+
+    <div>
+        <label>Escolha o Bicho:</label>
+        <select name="bichoId" class="form-control">
+            @foreach (var b in bichos!)
+            {
+                <option value="@b.Id">@b.Id - @b.Nome</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label>Tipo de Aposta:</label>
+        <select name="tipo" class="form-control">
+            <option value="0">Bicho (18x)</option>
+            <option value="1">Dezena (60x)</option>
+            <option value="2">Centena (600x)</option>
+            <option value="3">Milhar (4000x)</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Valor:</label>
+        <input type="number" name="valor" step="0.01" min="0.01" class="form-control" />
+    </div>
+
+    <br />
+    <button type="submit">Apostar</button>
+</form>

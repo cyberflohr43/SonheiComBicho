@@ -8,5 +8,6 @@ namespace SonheiComBicho.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
             public DbSet<Jogador> Jogadores { get; set; }
+            public DbSet<Aposta> Apostas { get; set; }
     }
 }

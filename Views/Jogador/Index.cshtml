@@ -1,0 +1,23 @@
+﻿@model List<SonheiComBicho.Models.Jogador>
+
+<h2>Jogadores Cadastrados</h2>
+
+<a href="/Jogador/Cadastrar">+ Novo Jogador</a>
+
+<table class="table">
+    <tr>
+        <th>Nome</th>
+        <th>CPF</th>
+        <th>Telefone</th>
+        <th>Saldo</th>
+    </tr>
+    @foreach (var j in Model)
+    {
+        <tr>
+            <td>@j.Nome</td>
+            <td>@j.CPF</td>
+            <td>@j.Telefone</td>
+            <td>R$ @j.Saldo.ToString("F2")</td>
+        </tr>
+    }
+</table>

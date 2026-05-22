@@ -1,0 +1,33 @@
+﻿@model List<SonheiComBicho.Models.Aposta>
+
+@{
+    var jogador = ViewBag.Jogador as SonheiComBicho.Models.Jogador;
+    var bichos = SonheiComBicho.Models.Bicho.GetBichos();
+}
+
+<h2>Histórico de Apostas</h2>
+<p>Jogador: <strong>@jogador?.Nome</strong> | Saldo: <strong>R$ @jogador?.Saldo.ToString("F2")</strong></p>
+
+<a href="/Aposta/Apostar?jogadorId=@jogador?.Id">+ Nova Aposta</a>
+
+<table class="table">
+    <tr>
+        <th>Data</th>
+        <th>Bicho</th>
+        <th>Tipo</th>
+        <th>Valor</th>
+        <th>Resultado</th>
+        <th>Ganhou</th>
+    </tr>
+    @foreach (var a in Model)
+    {
+        <tr>
+            <td>@a.DataAposta.ToString("dd/MM/yyyy HH:mm")</td>
+            <td>@bichos.FirstOrDefault(b => b.Id == a.BichoId)?.Nome</td>
+            <td>@a.Tipo</td>
+            <td>R$ @a.ValorApostado.ToString("F2")</td>
+            <td>@(a.Ganhou == true ? "R$ +" + a.ValorGanho.ToString("F2") : "Perdeu")</td>
+            <td>@(a.Ganhou == true ? "✅" : "❌")</td>
+        </tr>
+    }
+</table>

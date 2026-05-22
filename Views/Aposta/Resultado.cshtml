@@ -1,0 +1,25 @@
+﻿@{
+    var aposta = ViewBag.Aposta as SonheiComBicho.Models.Aposta;
+    var jogador = ViewBag.Jogador as SonheiComBicho.Models.Jogador;
+    bool ganhou = (bool)(ViewBag.Ganhou ?? false);
+}
+
+<h2>Resultado da Aposta</h2>
+
+<p>Jogador: <strong>@jogador?.Nome</strong></p>
+<p>Bicho escolhido: <strong>@ViewBag.BichoEscolhido</strong></p>
+<p>Bicho sorteado: <strong>@ViewBag.BichoSorteado</strong></p>
+
+@if (ganhou)
+{
+    <h3 style="color:green">🎉 Você ganhou R$ @ViewBag.ValorGanho!</h3>
+}
+else
+{
+    <h3 style="color:red">😢 Você perdeu!</h3>
+}
+
+<p>Saldo atual: <strong>R$ @jogador?.Saldo.ToString("F2")</strong></p>
+
+<a href="/Aposta/Apostar?jogadorId=@jogador?.Id">Apostar novamente</a> |
+<a href="/Aposta/Historico?jogadorId=@jogador?.Id">Ver histórico</a>

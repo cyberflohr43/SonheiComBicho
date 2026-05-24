@@ -35,5 +35,27 @@ namespace SonheiComBicho.Controllers
             var jogadores = _context.Jogadores.ToList();
             return View(jogadores);
         }
+
+        public IActionResult Depositar(int id)
+        {
+            var jogador = _context.Jogadores.Find(id);
+            if (jogador == null) return NotFound();
+            return View(jogador);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Depositar(int id, decimal valor)
+        {
+            var jogador = _context.Jogadores.Find(id);
+            if (jogador == null) return NotFound();
+
+            if (valor > 0)
+            {
+                jogador.Saldo += valor;
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }

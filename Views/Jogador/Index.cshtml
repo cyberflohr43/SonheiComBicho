@@ -10,14 +10,19 @@
         <th>CPF</th>
         <th>Telefone</th>
         <th>Saldo</th>
+        <th>Ações</th>
     </tr>
     @foreach (var j in Model)
     {
         <tr>
-            <td>@j.Nome</td>
+            <td><a href="/Aposta/Apostar?jogadorId=@j.Id">@j.Nome</a></td>
             <td>@j.CPF</td>
             <td>@j.Telefone</td>
             <td>R$ @j.Saldo.ToString("F2")</td>
+            <td>
+                <a href="/Jogador/Depositar?id=@j.Id">Depositar</a> |
+                <a href="/Aposta/Historico?jogadorId=@j.Id">Histórico</a>
+            </td>
         </tr>
     }
 </table>

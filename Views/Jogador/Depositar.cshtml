@@ -1,0 +1,15 @@
+﻿@model SonheiComBicho.Models.Jogador
+
+<h2>Depositar Saldo</h2>
+<p>Jogador: <strong>@Model.Nome</strong> | Saldo atual: <strong>R$ @Model.Saldo.ToString("F2")</strong></p>
+
+<form asp-action="Depositar" asp-route-id="@Model.Id" method="post">
+    <div>
+        <label>Valor a depositar:</label>
+        <input type="number" name="valor" step="0.01" min="0.01" class="form-control" />
+    </div>
+    <br />
+    <button type="submit">Depositar</button>
+</form>
+
+<a href="/Jogador/Index">Voltar</a>

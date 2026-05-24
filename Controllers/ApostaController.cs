@@ -73,7 +73,7 @@ namespace SonheiComBicho.Controllers
 
             TempData["BichoSorteado"] = bichoSorteado?.Nome ?? "Desconhecido";
             TempData["Ganhou"] = aposta.Ganhou;
-            TempData["ValorGanho"] = aposta.ValorGanho;
+            TempData["ValorGanho"] = aposta.ValorGanho.ToString("F2");
 
             return RedirectToAction("Resultado", new { apostaId = aposta.Id });
         }

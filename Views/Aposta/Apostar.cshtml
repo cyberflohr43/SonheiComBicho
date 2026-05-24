@@ -3,41 +3,168 @@
     var bichos = ViewBag.Bichos as List<SonheiComBicho.Models.Bicho>;
 }
 
-<h2>Fazer Aposta</h2>
-<p>Jogador: <strong>@jogador?.Nome</strong> | Saldo: <strong>R$ @jogador?.Saldo.ToString("F2")</strong></p>
+<style>
+    body { background: #1a3a1a; }
+    .jb-wrap { background: #1a3a1a; font-family: 'Oswald', sans-serif; border: 2px solid #8a6a00; border-radius: 8px; overflow: hidden; max-width: 900px; margin: 20px auto; }
+    .jb-header { background: #0d2a0d; border-bottom: 2px solid #8a6a00; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .jb-logo { background: #000; border: 2px solid #c8a000; border-radius: 8px; padding: 4px 12px; color: #5ecb5e; font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+    .jb-player { text-align: right; color: #e8d080; font-size: 13px; }
+    .jb-player span { color: #fff; font-weight: 600; }
+    .jb-apostar-bar { background: #2a5a0a; border-bottom: 2px solid #8a6a00; border-top: 2px solid #8a6a00; padding: 10px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 16px; }
+    .jb-apostar-btn { background: #3a6a10; border: 2px solid #c8a000; border-radius: 6px; color: #f0d060; font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700; padding: 8px 32px; letter-spacing: 2px; cursor: pointer; }
+    .jb-apostar-btn:hover { background: #4a8a18; }
+    .jb-num-display { background: #0d2a0d; border: 2px solid #8a6a00; border-radius: 6px; padding: 4px 12px; color: #f0d060; font-size: 16px; font-weight: 700; min-width: 100px; text-align: center; }
+    .jb-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 8px; background: #1a3a1a; }
+    .jb-bicho { background: #0d2a0d; border: 2px solid #5a7a30; border-radius: 8px; padding: 6px 4px; cursor: pointer; text-align: center; position: relative; transition: border-color 0.15s; }
+    .jb-bicho:hover, .jb-bicho.selected { border-color: #c8a000; background: #1a4a0a; }
+    .jb-bicho-num { position: absolute; top: 4px; left: 6px; color: #f0d060; font-size: 11px; font-weight: 700; }
+    .jb-bicho-nums { position: absolute; top: 4px; right: 4px; display: flex; flex-direction: column; gap: 1px; }
+    .jb-bicho-nums span { background: #2a4a10; border: 1px solid #8a6a00; border-radius: 3px; color: #f0d060; font-size: 9px; font-weight: 700; padding: 0 3px; text-align: center; }
+    .jb-bicho-emoji { font-size: 22px; margin: 12px 0 2px; }
+    .jb-bicho-nome { color: #c8e890; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+    .jb-footer { background: #0d2a0d; border-top: 2px solid #8a6a00; padding: 6px 16px; color: #8aaa60; font-size: 11px; display: flex; justify-content: space-between; }
+    .jb-valor-input { background: #0d2a0d; border: 2px solid #8a6a00; border-radius: 6px; color: #f0d060; font-family: 'Oswald', sans-serif; font-size: 15px; padding: 4px 10px; width: 100px; text-align: center; }
+    .jb-tipo-select { background: #0d2a0d; border: 2px solid #8a6a00; border-radius: 6px; color: #f0d060; font-family: 'Oswald', sans-serif; font-size: 14px; padding: 4px 8px; }
+    .jb-erro { color: #ff6060; background: #3a0000; border: 1px solid #aa0000; border-radius: 6px; padding: 8px 16px; margin: 8px; text-align: center; }
+</style>
 
-@if (TempData["Erro"] != null)
-{
-    <p style="color:red">@TempData["Erro"]</p>
-}
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
 
-<form asp-action="Apostar" asp-route-jogadorId="@jogador?.Id" method="post">
+<div class="jb-wrap">
+    <div class="jb-header">
+        <div style="color:#8aaa60;font-size:20px;">☰</div>
+        <div class="jb-logo">SONHEI COM BICHO</div>
+        <div class="jb-player">
+            Jogador: <span>@jogador?.Nome</span><br />
+            Saldo: <span>R$ @jogador?.Saldo.ToString("F2")</span>
+        </div>
+    </div>
 
-    <div>
-        <label>Escolha o Bicho:</label>
-        <select name="bichoId" class="form-control">
+    @if (TempData["Erro"] != null)
+    {
+        <div class="jb-erro">@TempData["Erro"]</div>
+    }
+
+    <form asp-action="Apostar" asp-route-jogadorId="@jogador?.Id" method="post" id="form-aposta">
+        <input type="hidden" name="bichoId" id="input-bicho" value="0" />
+
+        <div class="jb-apostar-bar">
+            <div class="jb-num-display" id="jb-sel-bicho">Selecione um bicho</div>
+            <select name="tipo" class="jb-tipo-select">
+                <option value="0">Bicho (18x)</option>
+                <option value="1">Dezena (60x)</option>
+                <option value="2">Centena (600x)</option>
+                <option value="3">Milhar (4000x)</option>
+            </select>
+            <input class="jb-valor-input" type="number" name="valor" placeholder="R$ 0,00" min="1" step="1" />
+            <button type="submit" class="jb-apostar-btn">APOSTAR</button>
+        </div>
+
+        <div class="jb-grid">
             @foreach (var b in bichos!)
             {
-                <option value="@b.Id">@b.Id - @b.Nome</option>
+                <div class="jb-bicho" id="bicho-@b.Id" onclick="selecionarBicho(@b.Id, '@b.Nome')">
+                    <span class="jb-bicho-num">@b.Id.ToString("D2")</span>
+                    <div class="jb-bicho-nums">
+                        <span>@b.NumeroInicial.ToString("D2")</span>
+                        <span>@((b.NumeroInicial + 1).ToString("D2"))</span>
+                        <span>@((b.NumeroInicial + 2).ToString("D2"))</span>
+                        <span>@(b.NumeroFinal == 0 ? "00" : b.NumeroFinal.ToString("D2"))</span>
+                    </div>
+                    <div class="jb-bicho-emoji">
+                        @switch (b.Id)
+                        {
+                            case 1: <text>🦤</text> break;
+                            case 2: <text>🦅</text> break;
+                            case 3: <text>🫏</text> break;
+                            case 4: <text>🦋</text> break;
+                            case 5: <text>🐕</text> break;
+                            case 6: <text>🐐</text> break;
+                            case 7: <text>🐑</text> break;
+                            case 8: <text>🐪</text> break;
+                            case 9: <text>🐍</text> break;
+                            case 10: <text>🐇</text> break;
+                            case 11:
+
+                                <text>🐎</text>
+                                break;
+                            case 12:
+
+                                <text>🐘</text>
+                                break;
+                            case 13:
+
+                                <text>🐓</text>
+                                break;
+                            case 14:
+
+                                <text>🐈</text>
+                                break;
+                            case 15:
+
+                                <text>🐊</text>
+                                break;
+                            case 16:
+
+                                <text>🦁</text>
+                                break;
+                            case 17:
+
+                                <text>🐒</text>
+                                break;
+                            case 18:
+
+                                <text>🐷</text>
+                                break;
+                            case 19:
+
+                                <text>🦚</text>
+                                break;
+                            case 20:
+
+                                <text>🦃</text>
+                                break;
+                            case 21:
+
+                                <text>🐂</text>
+                                break;
+                            case 22:
+
+                                <text>🐯</text>
+                                break;
+                            case 23:
+
+                                <text>🐻</text>
+                                break;
+                            case 24:
+
+                                <text>🦌</text>
+                                break;
+                            case 25:
+
+                                <text>🐄</text>
+                                break;
+                        }
+                    </div>
+                    <div class="jb-bicho-nome">@b.Nome</div>
+                </div>
             }
-        </select>
-    </div>
+        </div>
+    </form>
 
-    <div>
-        <label>Tipo de Aposta:</label>
-        <select name="tipo" class="form-control">
-            <option value="0">Bicho (18x)</option>
-            <option value="1">Dezena (60x)</option>
-            <option value="2">Centena (600x)</option>
-            <option value="3">Milhar (4000x)</option>
-        </select>
+    <div class="jb-footer">
+        <span>Selecione um bicho e o valor para apostar</span>
+        <span>Saldo: R$ @jogador?.Saldo.ToString("F2")</span>
     </div>
+</div>
 
-    <div>
-        <label>Valor:</label>
-        <input type="number" name="valor" step="0.01" min="0.01" class="form-control" />
-    </div>
-
-    <br />
-    <button type="submit">Apostar</button>
-</form>
+<script>
+    let selectedId = 0;
+    function selecionarBicho(id, nome) {
+        if (selectedId) document.getElementById('bicho-' + selectedId).classList.remove('selected');
+        selectedId = id;
+        document.getElementById('bicho-' + id).classList.add('selected');
+        document.getElementById('input-bicho').value = id;
+        document.getElementById('jb-sel-bicho').textContent = nome;
+    }
+</script>

@@ -1,15 +1,221 @@
 ﻿@model SonheiComBicho.Models.Jogador
 
-<h2>Depositar Saldo</h2>
-<p>Jogador: <strong>@Model.Nome</strong> | Saldo atual: <strong>R$ @Model.Saldo.ToString("F2")</strong></p>
+<style>
+    body {
+        background: #1a3a1a;
+    }
 
-<form asp-action="Depositar" asp-route-id="@Model.Id" method="post">
-    <div>
-        <label>Valor a depositar:</label>
-        <input type="number" name="valor" step="0.01" min="0.01" class="form-control" />
+    .jb-wrap {
+        background: #1a3a1a;
+        font-family: 'Oswald', sans-serif;
+        border: 2px solid #8a6a00;
+        border-radius: 8px;
+        overflow: hidden;
+        max-width: 700px;
+        margin: 20px auto;
+    }
+
+    .jb-header {
+        background: #0d2a0d;
+        border-bottom: 2px solid #8a6a00;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .jb-logo {
+        background: #000;
+        border: 2px solid #c8a000;
+        border-radius: 8px;
+        padding: 4px 12px;
+        color: #5ecb5e;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .jb-player {
+        text-align: right;
+        color: #e8d080;
+        font-size: 13px;
+    }
+
+        .jb-player span {
+            color: #fff;
+            font-weight: 600;
+        }
+
+    .jb-body {
+        padding: 24px;
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .jb-box {
+        background: #0d2a0d;
+        border: 2px solid #c8a000;
+        border-radius: 12px;
+        padding: 24px;
+    }
+
+    .jb-box-titulo {
+        color: #f0d060;
+        font-size: 18px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+    }
+
+    .jb-metodo-btn {
+        display: block;
+        width: 100%;
+        background: #2a5a0a;
+        border: 2px solid #c8a000;
+        border-radius: 8px;
+        color: #f0d060;
+        font-family: 'Oswald', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        padding: 12px 32px;
+        letter-spacing: 2px;
+        cursor: pointer;
+        margin-bottom: 8px;
+    }
+
+        .jb-metodo-btn.selected, .jb-metodo-btn:hover {
+            background: #4a8a18;
+        }
+
+    .jb-valor-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .jb-valor-btn {
+        background: #0d2a0d;
+        border: 2px solid #8a6a00;
+        border-radius: 20px;
+        color: #f0d060;
+        font-family: 'Oswald', sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 10px;
+        cursor: pointer;
+        text-align: center;
+        transition: border-color 0.15s;
+    }
+
+        .jb-valor-btn:hover, .jb-valor-btn.selected {
+            border-color: #c8a000;
+            background: #1a4a0a;
+        }
+
+    .jb-input {
+        width: 100%;
+        background: #0d2a0d;
+        border: 2px solid #8a6a00;
+        border-radius: 20px;
+        color: #f0d060;
+        font-family: 'Oswald', sans-serif;
+        font-size: 15px;
+        padding: 8px 16px;
+        text-align: center;
+        box-sizing: border-box;
+        margin-bottom: 12px;
+    }
+
+        .jb-input::placeholder {
+            color: #5a7a40;
+        }
+
+    .jb-confirmar-btn {
+        display: block;
+        width: 100%;
+        background: #3a6a10;
+        border: 2px solid #c8a000;
+        border-radius: 20px;
+        color: #f0d060;
+        font-family: 'Oswald', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 12px;
+        letter-spacing: 2px;
+        cursor: pointer;
+        text-align: center;
+    }
+
+        .jb-confirmar-btn:hover {
+            background: #4a8a18;
+        }
+
+    .jb-footer {
+        background: #0d2a0d;
+        border-top: 2px solid #8a6a00;
+        padding: 6px 16px;
+        color: #8aaa60;
+        font-size: 11px;
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<div class="jb-wrap">
+    <div class="jb-header">
+        <div style="color:#8aaa60;font-size:20px;">☰</div>
+        <div class="jb-logo">SONHEI COM BICHO</div>
+        <div class="jb-player">
+            Jogador: <span>@Model.Nome</span><br />
+            Saldo: <span>R$ @Model.Saldo.ToString("F2")</span>
+        </div>
     </div>
-    <br />
-    <button type="submit">Depositar</button>
-</form>
 
-<a href="/Jogador/Index">Voltar</a>
+    <form asp-action="Depositar" asp-route-id="@Model.Id" method="post">
+        <input type="hidden" name="valor" id="input-valor" value="0" />
+        <div class="jb-body">
+            <div class="jb-box" style="min-width:180px;">
+                <div class="jb-box-titulo">MÉTODOS DE<br />PAGAMENTO</div>
+                <button type="button" class="jb-metodo-btn selected">PIX</button>
+            </div>
+            <div class="jb-box" style="min-width:220px;">
+                <div class="jb-box-titulo">depositar</div>
+                <div class="jb-valor-grid">
+                    <div class="jb-valor-btn" onclick="setValor(10, this)">R$10</div>
+                    <div class="jb-valor-btn" onclick="setValor(20, this)">R$20</div>
+                    <div class="jb-valor-btn" onclick="setValor(50, this)">R$50</div>
+                    <div class="jb-valor-btn" onclick="setValor(100, this)">R$100</div>
+                </div>
+                <input class="jb-input" type="number" id="valor-custom" placeholder="DIGITAR VALOR:" min="1" step="1" oninput="setValorCustom(this.value)" />
+                <button type="submit" class="jb-confirmar-btn">CONFIRMAR DEPÓSITO</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="jb-footer">
+        <span>Depósito simulado</span>
+        <span>Saldo atual: R$ @Model.Saldo.ToString("F2")</span>
+    </div>
+</div>
+
+<script>
+    let selectedBtn = null;
+    function setValor(val, el) {
+        document.getElementById('input-valor').value = val;
+        document.getElementById('valor-custom').value = '';
+        if (selectedBtn) selectedBtn.classList.remove('selected');
+        selectedBtn = el;
+        el.classList.add('selected');
+    }
+    function setValorCustom(val) {
+        document.getElementById('input-valor').value = val;
+        if (selectedBtn) selectedBtn.classList.remove('selected');
+        selectedBtn = null;
+    }
+</script>

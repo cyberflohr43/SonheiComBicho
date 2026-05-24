@@ -1,8 +1,137 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<style>
+    body {
+        background: #1a3a1a;
+    }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    .jb-wrap {
+        background: #1a3a1a;
+        font-family: 'Oswald', sans-serif;
+        border: 2px solid #8a6a00;
+        border-radius: 8px;
+        overflow: hidden;
+        max-width: 700px;
+        margin: 20px auto;
+    }
+
+    .jb-header {
+        background: #0d2a0d;
+        border-bottom: 2px solid #8a6a00;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .jb-logo {
+        background: #000;
+        border: 2px solid #c8a000;
+        border-radius: 8px;
+        padding: 4px 12px;
+        color: #5ecb5e;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .jb-body {
+        padding: 40px 24px;
+        text-align: center;
+    }
+
+    .jb-titulo {
+        color: #f0d060;
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        margin-bottom: 8px;
+    }
+
+    .jb-subtitulo {
+        color: #8aaa60;
+        font-size: 16px;
+        margin-bottom: 40px;
+        letter-spacing: 1px;
+    }
+
+    .jb-emoji {
+        font-size: 72px;
+        margin-bottom: 24px;
+    }
+
+    .jb-btn-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .jb-btn {
+        display: block;
+        background: #0d2a0d;
+        border: 2px solid #c8a000;
+        border-radius: 12px;
+        color: #f0d060;
+        font-family: 'Oswald', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        padding: 20px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.15s;
+    }
+
+        .jb-btn:hover {
+            background: #1a4a0a;
+            color: #f0d060;
+        }
+
+        .jb-btn .jb-btn-icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+    .jb-footer {
+        background: #0d2a0d;
+        border-top: 2px solid #8a6a00;
+        padding: 6px 16px;
+        color: #8aaa60;
+        font-size: 11px;
+        text-align: center;
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<div class="jb-wrap">
+    <div class="jb-header">
+        <div class="jb-logo">SONHEI COM BICHO</div>
+    </div>
+
+    <div class="jb-body">
+        <div class="jb-emoji">🐄🦁🐍</div>
+        <div class="jb-titulo">SONHEI COM BICHO</div>
+        <div class="jb-subtitulo">O melhor jogo do bicho online!</div>
+
+        <div class="jb-btn-grid">
+            <a href="/Jogador/Index" class="jb-btn">
+                <span class="jb-btn-icon">👥</span>
+                JOGADORES
+            </a>
+            <a href="/Jogador/Cadastrar" class="jb-btn">
+                <span class="jb-btn-icon">✏️</span>
+                CADASTRAR
+            </a>
+            <a href="/Jogador/Index" class="jb-btn" style="grid-column: span 2;">
+                <span class="jb-btn-icon">🎲</span>
+                JOGAR AGORA
+            </a>
+        </div>
+    </div>
+
+    <div class="jb-footer">
+        <span>Sonhei Com Bicho © 2026 — Projeto Acadêmico</span>
+    </div>
 </div>

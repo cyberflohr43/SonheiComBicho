@@ -1,28 +1,183 @@
 ﻿@model List<SonheiComBicho.Models.Jogador>
 
-<h2>Jogadores Cadastrados</h2>
-
-<a href="/Jogador/Cadastrar">+ Novo Jogador</a>
-
-<table class="table">
-    <tr>
-        <th>Nome</th>
-        <th>CPF</th>
-        <th>Telefone</th>
-        <th>Saldo</th>
-        <th>Ações</th>
-    </tr>
-    @foreach (var j in Model)
-    {
-        <tr>
-            <td><a href="/Aposta/Apostar?jogadorId=@j.Id">@j.Nome</a></td>
-            <td>@j.CPF</td>
-            <td>@j.Telefone</td>
-            <td>R$ @j.Saldo.ToString("F2")</td>
-            <td>
-                <a href="/Jogador/Depositar?id=@j.Id">Depositar</a> |
-                <a href="/Aposta/Historico?jogadorId=@j.Id">Histórico</a>
-            </td>
-        </tr>
+<style>
+    body {
+        background: #1a3a1a;
     }
-</table>
+
+    .jb-wrap {
+        background: #1a3a1a;
+        font-family: 'Oswald', sans-serif;
+        border: 2px solid #8a6a00;
+        border-radius: 8px;
+        overflow: hidden;
+        max-width: 900px;
+        margin: 20px auto;
+    }
+
+    .jb-header {
+        background: #0d2a0d;
+        border-bottom: 2px solid #8a6a00;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .jb-logo {
+        background: #000;
+        border: 2px solid #c8a000;
+        border-radius: 8px;
+        padding: 4px 12px;
+        color: #5ecb5e;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .jb-body {
+        padding: 24px;
+    }
+
+    .jb-titulo {
+        text-align: center;
+        margin-bottom: 16px;
+    }
+
+    .jb-titulo-box {
+        display: inline-block;
+        border: 2px solid #c8a000;
+        border-radius: 8px;
+        padding: 8px 32px;
+        color: #f0d060;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        background: #0d2a0d;
+    }
+
+    .jb-btn {
+        display: inline-block;
+        background: #3a6a10;
+        border: 2px solid #c8a000;
+        border-radius: 8px;
+        color: #f0d060;
+        font-family: 'Oswald', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 8px 24px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        text-decoration: none;
+        margin-bottom: 16px;
+    }
+
+        .jb-btn:hover {
+            background: #4a8a18;
+            color: #f0d060;
+        }
+
+    .jb-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 8px;
+        align-items: center;
+    }
+
+        .jb-row.header .jb-cell {
+            background: #0d2a0d;
+            color: #c8a000;
+            font-size: 13px;
+            border-color: #c8a000;
+        }
+
+    .jb-cell {
+        background: #0d2a0d;
+        border: 2px solid #5a7a30;
+        border-radius: 20px;
+        padding: 8px 16px;
+        color: #f0d060;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+        .jb-cell a {
+            color: #5ecb5e;
+            text-decoration: none;
+        }
+
+            .jb-cell a:hover {
+                color: #f0d060;
+            }
+
+    .jb-vazio {
+        text-align: center;
+        color: #8aaa60;
+        padding: 32px;
+        font-size: 16px;
+    }
+
+    .jb-footer {
+        background: #0d2a0d;
+        border-top: 2px solid #8a6a00;
+        padding: 6px 16px;
+        color: #8aaa60;
+        font-size: 11px;
+        text-align: center;
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<div class="jb-wrap">
+    <div class="jb-header">
+        <div style="color:#8aaa60;font-size:20px;">☰</div>
+        <div class="jb-logo">SONHEI COM BICHO</div>
+        <div></div>
+    </div>
+
+    <div class="jb-body">
+        <div class="jb-titulo">
+            <div class="jb-titulo-box">JOGADORES CADASTRADOS</div>
+        </div>
+
+        <a href="/Jogador/Cadastrar" class="jb-btn">+ NOVO JOGADOR</a>
+
+        @if (!Model.Any())
+        {
+            <div class="jb-vazio">Nenhum jogador cadastrado ainda.</div>
+        }
+        else
+        {
+            <div class="jb-row header">
+                <div class="jb-cell">NOME</div>
+                <div class="jb-cell">CPF</div>
+                <div class="jb-cell">TELEFONE</div>
+                <div class="jb-cell">SALDO</div>
+                <div class="jb-cell">AÇÕES</div>
+            </div>
+
+            @foreach (var j in Model)
+            {
+                <div class="jb-row">
+                    <div class="jb-cell">
+                        <a href="/Aposta/Apostar?jogadorId=@j.Id">@j.Nome</a>
+                    </div>
+                    <div class="jb-cell">@j.CPF</div>
+                    <div class="jb-cell">@j.Telefone</div>
+                    <div class="jb-cell">R$ @j.Saldo.ToString("F2")</div>
+                    <div class="jb-cell">
+                        <a href="/Jogador/Depositar?id=@j.Id">Depositar</a> |
+                        <a href="/Aposta/Historico?jogadorId=@j.Id">Histórico</a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="jb-footer">
+        <span>Sonhei Com Bicho — Painel de Jogadores</span>
+    </div>
+</div>

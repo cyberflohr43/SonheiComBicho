@@ -4,22 +4,174 @@
     bool ganhou = (bool)(ViewBag.Ganhou ?? false);
 }
 
-<h2>Resultado da Aposta</h2>
+<style>
+    body {
+        background: #1a3a1a;
+    }
 
-<p>Jogador: <strong>@jogador?.Nome</strong></p>
-<p>Bicho escolhido: <strong>@ViewBag.BichoEscolhido</strong></p>
-<p>Bicho sorteado: <strong>@ViewBag.BichoSorteado</strong></p>
+    .jb-wrap {
+        background: #1a3a1a;
+        font-family: 'Oswald', sans-serif;
+        border: 2px solid #8a6a00;
+        border-radius: 8px;
+        overflow: hidden;
+        max-width: 700px;
+        margin: 20px auto;
+    }
 
-@if (ganhou)
-{
-    <h3 style="color:green">🎉 Você ganhou R$ @ViewBag.ValorGanho!</h3>
-}
-else
-{
-    <h3 style="color:red">😢 Você perdeu!</h3>
-}
+    .jb-header {
+        background: #0d2a0d;
+        border-bottom: 2px solid #8a6a00;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-<p>Saldo atual: <strong>R$ @jogador?.Saldo.ToString("F2")</strong></p>
+    .jb-logo {
+        background: #000;
+        border: 2px solid #c8a000;
+        border-radius: 8px;
+        padding: 4px 12px;
+        color: #5ecb5e;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
 
-<a href="/Aposta/Apostar?jogadorId=@jogador?.Id">Apostar novamente</a> |
-<a href="/Aposta/Historico?jogadorId=@jogador?.Id">Ver histórico</a>
+    .jb-player {
+        text-align: right;
+        color: #e8d080;
+        font-size: 13px;
+    }
+
+        .jb-player span {
+            color: #fff;
+            font-weight: 600;
+        }
+
+    .jb-body {
+        padding: 24px;
+        text-align: center;
+    }
+
+    .jb-resultado-box {
+        border: 3px solid #c8a000;
+        border-radius: 12px;
+        padding: 24px;
+        margin: 16px 0;
+        background: #0d2a0d;
+    }
+
+    .jb-ganhou {
+        color: #5ecb5e;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .jb-perdeu {
+        color: #ff4444;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .jb-valor {
+        color: #f0d060;
+        font-size: 28px;
+        font-weight: 700;
+        margin: 8px 0;
+    }
+
+    .jb-info {
+        color: #8aaa60;
+        font-size: 15px;
+        margin: 6px 0;
+    }
+
+        .jb-info span {
+            color: #f0d060;
+            font-weight: 600;
+        }
+
+    .jb-btn {
+        display: inline-block;
+        background: #3a6a10;
+        border: 2px solid #c8a000;
+        border-radius: 6px;
+        color: #f0d060;
+        font-family: 'Oswald', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 10px 28px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        text-decoration: none;
+        margin: 8px;
+    }
+
+        .jb-btn:hover {
+            background: #4a8a18;
+            color: #f0d060;
+        }
+
+    .jb-emoji-big {
+        font-size: 64px;
+        margin: 8px 0;
+    }
+
+    .jb-footer {
+        background: #0d2a0d;
+        border-top: 2px solid #8a6a00;
+        padding: 6px 16px;
+        color: #8aaa60;
+        font-size: 11px;
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<div class="jb-wrap">
+    <div class="jb-header">
+        <div style="color:#8aaa60;font-size:20px;">☰</div>
+        <div class="jb-logo">SONHEI COM BICHO</div>
+        <div class="jb-player">
+            Jogador: <span>@jogador?.Nome</span><br />
+            Saldo: <span>R$ @jogador?.Saldo.ToString("F2")</span>
+        </div>
+    </div>
+
+    <div class="jb-body">
+        <div class="jb-resultado-box">
+            @if (ganhou)
+            {
+                <div class="jb-emoji-big">🎉</div>
+                <div class="jb-ganhou">VOCÊ GANHOU!</div>
+                <div class="jb-valor">+ R$ @ViewBag.ValorGanho</div>
+            }
+            else
+            {
+                <div class="jb-emoji-big">😢</div>
+                <div class="jb-perdeu">VOCÊ PERDEU!</div>
+                <div class="jb-valor">- R$ @aposta?.ValorApostado.ToString("F2")</div>
+            }
+
+            <div style="margin-top: 16px; border-top: 1px solid #3a6a10; padding-top: 16px;">
+                <div class="jb-info">Bicho escolhido: <span>@ViewBag.BichoEscolhido</span></div>
+                <div class="jb-info">Bicho sorteado: <span>@ViewBag.BichoSorteado</span></div>
+                <div class="jb-info">Saldo atual: <span>R$ @jogador?.Saldo.ToString("F2")</span></div>
+            </div>
+        </div>
+
+        <a href="/Aposta/Apostar?jogadorId=@jogador?.Id" class="jb-btn">APOSTAR NOVAMENTE</a>
+        <a href="/Aposta/Historico?jogadorId=@jogador?.Id" class="jb-btn">VER HISTÓRICO</a>
+    </div>
+
+    <div class="jb-footer">
+        <span>Resultado da aposta</span>
+        <span>Saldo: R$ @jogador?.Saldo.ToString("F2")</span>
+    </div>
+</div>
